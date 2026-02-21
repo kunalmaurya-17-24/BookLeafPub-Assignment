@@ -38,7 +38,7 @@ def search_knowledge_base(query: str) -> str:
        
         result = supabase.rpc("match_documents", {
             "query_embedding": query_embedding,
-            "match_count": 3
+            "match_count": 5
         }).execute()
         
         if not result.data:

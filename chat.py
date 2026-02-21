@@ -33,6 +33,7 @@ def main():
 
     print_banner()
     print_info(f"  Platform: {args.platform} | Sender: {args.sender}")
+    thread_id = f"{args.platform}_{args.sender}"
     print_info(f"  Type your query and press Enter. Type 'quit' or 'exit' to leave.\n")
     print(f"{DIM}{'─' * 52}{RESET}")
 
@@ -51,7 +52,7 @@ def main():
 
         print(f"{DIM}  Thinking...{RESET}", end="", flush=True)
         try:
-            response = run_customer_bot(query, args.platform, args.sender)
+            response = run_customer_bot(query, args.platform, args.sender, thread_id=thread_id)
             print(f"\r{' ' * 20}\r", end="")  
             print_bot(response)
         except Exception as e:

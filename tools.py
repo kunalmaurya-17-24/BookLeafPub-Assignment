@@ -38,20 +38,26 @@ def search_knowledge_base(query: str) -> str:
        
         result = supabase.rpc("match_documents", {
             "query_embedding": query_embedding,
-            "match_count": 3
+            "match_count": 5
         }).execute()
         
         if not result.data:
             return "No specific information found in the Knowledge Base for this query."
         
+        # Client-side filter: only keep chunks with similarity >= 0.5
+        filtered = [doc for doc in result.data if doc.get("similarity", 1) >= 0.5]
+        if not filtered:
+            return "No specific information found in the Knowledge Base for this query."
+        
         formatted_results = []
-        for doc in result.data:
+        for doc in filtered:
             content = doc.get("content", "")
             metadata = doc.get("metadata", {})
             source = metadata.get("source_file", "Unknown")
+            similarity = doc.get("similarity", 0)
             links = metadata.get("all_links", [])
             link_str = f"\nRelevant Links: {', '.join(links)}" if links else ""
-            formatted_results.append(f"[Source: {source}]\n{content}{link_str}")
+            formatted_results.append(f"[Source: {source} | Relevance: {similarity:.2f}]\n{content}{link_str}")
             
         return "\n\n---\n\n".join(formatted_results)
     except Exception as e:

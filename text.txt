@@ -1,0 +1,20 @@
+python chat.py
+
+
+Hi, can you check my book status
+
+sure, my email is sara.johnson@xyz.com
+
+How do royalties work for the 21-day challenge?
+
+Can I change my book title after I've already submitted the final files?
+
+What is my book's go-live date?
+
+Can you confirm my book's ISBN number?
+
+I want to sue for copyright infringement because another author has a similar title!
+
+exit
+
+python verify_db.py

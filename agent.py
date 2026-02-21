@@ -7,6 +7,7 @@ from langchain_core.messages import BaseMessage, HumanMessage, ToolMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langgraph.graph import StateGraph, END
 from langgraph.prebuilt import ToolNode
+from langgraph.checkpoint.memory import MemorySaver
 
 from tools import search_knowledge_base, check_author_status, log_interaction_to_supabase
 from identity import resolve_author_identity
@@ -39,11 +40,20 @@ def call_model(state: AgentState):
         "You are the BookLeaf Publishing AI Automation Specialist. "
         "Your goal is to assist authors with their publishing queries and status updates.\n\n"
         "GUIDELINES:\n"
-        "1. If you don't know the author's email, ASK for it before providing specific status details.\n"
-        "2. Only use the Knowledge Base tool for general questions about royalties, timelines, and challenge rules.\n"
-        "3. Use the Author Status tool for queries about specific books, ISBNs, or payment status.\n"
-        "4. If confidence is low or the query is unusual, flag for human handover.\n"
-        "5. ALWAYS be polite and professional."
+        "1. For GENERAL policy questions (royalties, timelines, challenge rules, submission guidelines, "
+        "login help, bestseller info, limitations), ALWAYS use the 'search_knowledge_base' tool to find the answer. "
+        "These questions do NOT require an email — answer them directly from the knowledge base.\n"
+        "   1a. If a question covers multiple topics (e.g. 'royalties for the 21-day challenge'), "
+        "call 'search_knowledge_base' TWICE with two focused queries: one for 'royalties' and one for '21-day challenge rules'. "
+        "Then combine both results in your answer.\n"
+        "2. For AUTHOR-SPECIFIC queries (book status, ISBN lookup, payment status, go-live date, manuscript status), "
+        "you MUST have the author's email. If the user has ALREADY provided their email earlier in the conversation, "
+        "reuse it — do NOT ask for it again. Only ask if no email has been shared yet. "
+        "Then use the 'check_author_status' tool with their email.\n"
+        "3. If a query involves legal matters (copyright, lawsuits, infringement) or is unusual/out of scope, "
+        "do NOT attempt to give legal advice. Instead, tell the user you are flagging this for a human BookLeaf representative "
+        "who will follow up with them, and offer to connect them now.\n"
+        "4. ALWAYS be polite and professional."
     )
     
     
@@ -135,10 +145,11 @@ workflow.add_conditional_edges(
 )
 
 
-app = workflow.compile()
+memory = MemorySaver()
+app = workflow.compile(checkpointer=memory)
 
 
-def run_customer_bot(user_input: str, platform: str, sender_id: str):
+def run_customer_bot(user_input: str, platform: str, sender_id: str, thread_id: str = "default"):
     """
     Entry point that incorporates Identity Unification.
     """
@@ -155,7 +166,8 @@ def run_customer_bot(user_input: str, platform: str, sender_id: str):
         "handover_required": False
     }
     
-    final_output = app.invoke(initial_state)
+    config = {"configurable": {"thread_id": thread_id}}
+    final_output = app.invoke(initial_state, config=config)
     
 
     last_msg = final_output["messages"][-1]

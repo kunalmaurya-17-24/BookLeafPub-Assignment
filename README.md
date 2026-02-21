@@ -3,7 +3,7 @@
 A multi-platform AI assistant designed to automate author workflows, resolve identities across channels, and provide intelligent publishing support via RAG (Retrieval-Augmented Generation).
 
 ## 📊 Workflow Diagram
-![Workflow of Assignment](https://raw.githubusercontent.com/kunalmaurya-17-24/BookLeafPub-Assignment/main/BookLeaf%20Assignment%20Workflow%20Figure.png)
+![Workflow of Assignment](https://raw.githubusercontent.com/kunalmaurya-17-24/BookLeafPub-Assignment/main/BookLeaf%20Assignment%20Workflow.png)
 
 
 ## 🚀 Key Features

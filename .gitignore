@@ -1,0 +1,31 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+*.log
+
+# Virtual environments
+.venv
+venv/
+env/
+
+# Environment Variables (CRITICAL)
+.env
+
+# OS Files
+.DS_Store
+thumbs.db
+
+# IDE Configs
+.vscode/
+.idea/
+
+# Large lock files (Optional)
+uv.lock
+
+FAQs (Knowledge Base) - AI Automation assignment.pdf
+
+_AI Automation Technical Round-1.docx (1).pdf

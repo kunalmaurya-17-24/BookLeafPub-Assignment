@@ -1,0 +1,13 @@
+langchain
+langchain-google-genai
+langgraph
+langchain-community
+supabase
+pymupdf
+python-dotenv
+rapidfuzz
+streamlit
+pandas
+pytest
+uvicorn
+fastapi

@@ -2,6 +2,10 @@
 
 A multi-platform AI assistant designed to automate author workflows, resolve identities across channels, and provide intelligent publishing support via RAG (Retrieval-Augmented Generation).
 
+## 📊 Workflow Diagram
+![Workflow of Assignment](Workflow%20of%20Assignment.png)
+
+
 ## 🚀 Key Features
 
 ### 1. Multi-Channel Identity Unification
